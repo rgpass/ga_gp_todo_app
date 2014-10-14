@@ -1,0 +1,24 @@
+<%= form_for(@task) do |task| %>
+
+  <div>
+    <%= task.label :title %>
+    <%= task.text_field :title %>
+  </div>
+  <br />
+
+  <div>
+    <%= task.label :completed %>
+    <%= task.check_box :completed %>
+  </div>
+  <br />
+
+  <div>
+    <%= task.label :due_at %>
+    <%= task.date_field :due_at %>
+  </div>
+  <br />
+  <div>
+    <%= task.submit 'Submit' %>
+  </div>
+
+  <% end %>

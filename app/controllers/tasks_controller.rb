@@ -10,7 +10,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     if @task.save
-      redirect_to task_path(@task.id)
+      redirect_to task_path(@task.id), notice: "You have created a new task"
     else
       # id is generated only when it saves to the database
       # If it doesn't save, no id is generated
