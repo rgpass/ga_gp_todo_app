@@ -29,7 +29,7 @@ describe "tasks" do
     # Test the create action
     describe "create POST /tasks" do
 
-      let(:submit) { "Create" }
+      let(:submit) { "Save" }
 
       # Valid info
         # Fill in forms
@@ -38,7 +38,7 @@ describe "tasks" do
         before do
           # visit new_task_path
           fill_in "Title",      with: "Walk the dog"
-          fill_in "Complete",   with: true
+          check 'task_completed'
           fill_in "Due at",     with: 2.weeks.from_now.to_date
         end
 
@@ -48,10 +48,19 @@ describe "tasks" do
           expect { click_button submit }.to change(Task, :count).by(1)
         end
 
-        it "redirects to :show" do
-          # Click submit
-          click_button submit
-          # Check for redirect
+        # # BEFORE -- read: errors
+        # it "redirects to :show" do
+        #   # Click submit
+        #   click_button submit
+        #   # Check for redirect
+        #   it { should have_title("Todo | Show Task") }
+        #   it { should have_selector('p', "Walk the dog") }
+        # end
+
+        describe "after submission" do
+          before { click_button submit }
+
+          # Redirect to :show
           it { should have_title("Todo | Show Task") }
           it { should have_selector('p', "Walk the dog") }
         end
@@ -67,9 +76,19 @@ describe "tasks" do
           expect { click_button submit }.not_to change(Task, :count)
         end
 
-        it "re-renders :new with errors" do
+        # # BEFORE -- read: errors
+        # it "re-renders :new with errors" do
+        #   before { click_button submit }
+
+        #   it { should have_title('Todo | New Task') }
+        #   it { should have_content('error') }
+        # end
+
+        # AFTER -- fixed
+        describe "after submission" do
           before { click_button submit }
 
+          # re-renders :new with errors
           it { should have_title('Todo | New Task') }
           it { should have_content('error') }
         end
