@@ -58,4 +58,94 @@ describe TasksController, type: :controller do
       end
     end
   end
+
+  describe "GET index" do
+    before { Task.destroy_all }
+
+    let(:first_task) { Task.create(title: "Walk the dog") }
+    let(:second_task) { Task.create(title: "Buy groceries") }
+
+    it "renders :index" do
+      get :index
+      expect(response).to render_template(:index)
+    end
+
+    # It should assign @tasks equal to all Tasks
+    it "assigns all tasks to @tasks as an array" do
+      get :index
+      assigns(:tasks).should eq([first_task, second_task]) # May be reversed order
+      # Behind the scenes, this will test: @tasks == [ { id: 1, title: "Walk the dog" }, { id: 2, title: "Buy groceries"} ]
+    end
+  end
+
+  describe "GET edit" do
+    let(:task) { Task.create(title: "Walk the dog") }
+
+    it "renders :edit" do
+      get :edit, id: task.id
+      expect(response).to render_template(:edit)
+    end
+
+    it "assigns requested task to @task" do
+      get :edit, id: task.id
+      assigns(:task).should eq(task)
+    end
+  end
+
+  describe "PUT update" do
+    let(:task) { Task.create(title: "Do the dishes") }
+
+    context "valid attributes" do
+      # it changes @task's attributes
+      it "changes @task's attributes" do
+        # 1. Make a change to @task in the background
+        put :update, id: task.id, task: { title: "Walk the dog" }
+        # 2. Refresh the data
+        task.reload
+        # 3. Test that @task (older version) isn't the same as @task (newer version)
+        expect(task.title).to eq("Walk the dog")
+      end
+
+      it "redirects to :show" do
+        put :update, id: task.id, task: { title: "Walk the dog" }
+        last_task = Task.last
+        expect(response).to redirect_to(task_path(last_task.id))
+      end
+    end
+
+    context "invalid attributes" do
+      it "does not change @task's attributes" do
+        put :update, id: task.id, task: { title: "" } # Now invalid w/blank title
+        task.reload
+        expect(task.title).to eq("Do the dishes")
+      end
+
+      it "re-renders :edit" do
+        put :update, id: task.id, task: { title: "" } # Now invalid w/blank title
+        expect(response).to render_template(:edit)
+      end
+    end
+  end
+
+  describe "DELETE destroy" do
+    let(:task) { Task.create(title: "Walk the dog") }
+
+    it "deletes the requested task" do
+      expect{
+        delete :destroy, id: task.id
+      }.to change(Task, :count).by(-1)
+    end
+
+    it "redirects to :index" do
+      delete :destroy, id: task.id
+      expect(response).to redirect_to(tasks_path)
+    end
+  end
 end
+
+# /tasks/5 -- I want to only see the info for task w/id of 5 -- @task -- talking about a single task, useful in a show
+# /tasks -- @tasks = Task.all
+# Task is a class, TR --> User, GroceryList
+# DB table is tasks table
+# Task model, TasksController, 
+# /tasks/3, /tasks/17

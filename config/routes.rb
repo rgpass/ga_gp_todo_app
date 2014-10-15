@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   match '/help',  to: 'static_pages#help',  via: 'get'
 
   # Limiting which ones are available for learning purposes
-  resources :tasks, only: [:show, :new, :create]
+  resources :tasks, only: [:show, :new, :create, :index, :edit, :update]
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
