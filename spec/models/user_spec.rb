@@ -13,6 +13,7 @@ describe User do
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:authenticate) }
   it { should be_valid }
 
   describe "validations" do
@@ -78,6 +79,43 @@ describe User do
         it { should_not be_valid }
         
         User.destroy_all
+      end
+    end
+
+    describe "password" do
+      context "not present" do
+        before { @user.password = @user.password_confirmation = " " }
+        it { should_not be_valid}
+      end
+
+      context "too short" do
+        before { @user.password = @user.password_confirmation = "a" * 5 }
+        it { should_not be_valid }
+      end
+
+      context "doesn't match confirmation" do
+        before { @user.password_confirmation = "mismatch" }
+        it { should_not be_valid }
+      end
+
+      describe "return value of authenticate method" do
+        before do
+          User.destroy_all
+          @user.save
+        end
+
+        let(:found_user) { User.find_by(email: @user.email) }
+
+        context "with valid password" do
+          it { should eq found_user.authenticate(@user.password) } # it == @user, 
+        end
+
+        context "with invalid password" do
+          let(:user_for_invalid_password) { found_user.authenticate("invalid-password") }
+
+          it { should_not eq user_for_invalid_password } # @user != user_for_invalid_password
+          specify { expect(user_for_invalid_password).to be_falsey }
+        end
       end
     end
   end
