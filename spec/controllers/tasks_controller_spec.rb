@@ -128,7 +128,7 @@ describe TasksController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let(:task) { Task.create(title: "Walk the dog") }
+    let!(:task) { Task.create(title: "Walk the dog") }
 
     it "deletes the requested task" do
       expect{

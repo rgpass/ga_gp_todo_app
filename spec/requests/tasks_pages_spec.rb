@@ -11,7 +11,7 @@ describe "tasks" do
     before { visit task_path(my_task.id) }
 
     # Will see if the title is set correctly
-    it { should have_title("Todo | Show Task") }
+    it { should have_title("Todo | #{my_task.title}") }
 
     # Will see if the headers are set correctly
     it { should have_selector('h1', text: "I need to...") }
@@ -42,7 +42,7 @@ describe "tasks" do
         describe "after submission" do
           before { click_button submit }
 
-          it { should have_title("Todo | Show Task") }
+          it { should have_title("Todo | Walk the dog") }
           it { should have_selector('p', text: "Walk the dog") }
         end
       end
@@ -89,7 +89,7 @@ describe "tasks" do
     it { should have_selector('h1', text: 'Edit Task') }
 
     describe "update PUT /tasks/:id" do
-      let(:submit) { "Save Changes" }
+      let(:submit) { "Save" }
 
       context "valid information" do
         before do
@@ -97,7 +97,7 @@ describe "tasks" do
           click_button submit
         end
 
-        it { should have_title("Todo | Show Task") }
+        it { should have_title("Todo | Walk the dog") }
         it { should have_selector('p', text: "Walk the dog") }
         specify { expect(task.reload.title).to eq("Walk the dog") }
       end

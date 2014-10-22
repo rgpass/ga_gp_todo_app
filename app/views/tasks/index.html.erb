@@ -1,0 +1,9 @@
+<% provide(:title, "My Tasks") %>
+
+<h1>All Tasks</h1>
+
+<ul>
+  <% @tasks.each do |task| %>
+    <li><%= task.title %>, <%= link_to "delete", task, method: :delete, data: { confirm: "Are you sure?" } %></li>
+  <% end %>
+</ul>

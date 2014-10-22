@@ -57,5 +57,5 @@ describe UsersController, type: :controller do
       # Assigns @user to eq user that we defined on line 5
       assigns(:user).should eq(user)
     end
-  end  
+  end
 end
