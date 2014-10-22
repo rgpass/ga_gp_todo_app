@@ -1,4 +1,6 @@
 class TasksController < ApplicationController
+  # before_action :signed_in_user
+
   def show
     @task = Task.find(params[:id])
   end
@@ -45,5 +47,9 @@ class TasksController < ApplicationController
 
     def task_params
       params.require(:task).permit(:title, :completed, :due_at)
+    end
+
+    def signed_in_user
+      redirect_to signin_path, notice: "Please sign in." unless signed_in?
     end
 end

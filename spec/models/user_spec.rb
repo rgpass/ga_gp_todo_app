@@ -14,6 +14,7 @@ describe User do
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
+  it { should respond_to(:remember_token) }
   it { should be_valid }
 
   describe "validations" do
@@ -116,6 +117,17 @@ describe User do
           it { should_not eq user_for_invalid_password } # @user != user_for_invalid_password
           specify { expect(user_for_invalid_password).to be_falsey }
         end
+      end
+    end
+
+    describe "remember token" do
+      before do
+        User.destroy_all
+        @user.save
+      end
+
+      it "has a default value" do
+        expect(@user.remember_token).to_not be_blank
       end
     end
   end

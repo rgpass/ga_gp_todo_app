@@ -38,4 +38,27 @@ describe "Authentication" do
       end
     end
   end
+
+  describe "authorization" do
+    describe "for non-signed in users" do
+      User.destroy_all
+      let(:first_user) { FactoryGirl.create(:user, email: "first@email.com") }
+      let(:second_user) { FactoryGirl.create(:user, email: "second@email.com") }
+
+      describe "when attempting to visit a protected page" do
+        before do
+          visit user_path(second_user.id) # currently protected
+          fill_in "Email", with: first_user.email
+          fill_in "Password", with: first_user.password
+          click_button "Sign In"
+        end
+
+        describe "after signing in" do
+          it "renders the desired protected page" do # Friendly Forwarding
+            expect(page).to have_title("Todo | #{second_user.name}")
+          end
+        end
+      end
+    end
+  end
 end
