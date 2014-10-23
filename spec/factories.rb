@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :task do
     title       "Walk the dog"
     completed   false
+    user
   end
 
   sequence :name do |n|

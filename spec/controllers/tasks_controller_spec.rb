@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TasksController, type: :controller do
   describe "GET show" do
-    let(:task) { Task.create(title: "Walk the dog") }
+    let(:task) { FactoryGirl.create(:task, title: "Walk the dog") }
 
     it "renders :show" do
       get :show, id: task.id
@@ -34,12 +34,12 @@ describe TasksController, type: :controller do
       it "creates task" do
         # When I post to the create action, change Task.count by 1, aka add 1 to the tasks db
         expect{
-          post :create, task: { title: "Walk the dog" }
+          post :create, task: FactoryGirl.attributes_for(:task)
         }.to change(Task, :count).by(1)
       end
 
       it "redirects to :show" do
-        post :create, task: { title: "Walk the dog" }
+        post :create, task: FactoryGirl.attributes_for(:task)
         last_task = Task.last
         expect(response).to redirect_to(task_path(last_task.id))
       end
@@ -48,12 +48,12 @@ describe TasksController, type: :controller do
     context "invalid attributes" do
       it "does not create task" do
         expect{
-          post :create, task: { title: "" }
+          post :create, task: FactoryGirl.attributes_for(:task, title: "")
         }.to_not change(Task, :count)
       end
 
       it "re-renders :new" do
-        post :create, task: { title: "" }
+        post :create, task: FactoryGirl.attributes_for(:task, title: "")
         expect(response).to render_template(:new)
       end
     end
@@ -62,8 +62,8 @@ describe TasksController, type: :controller do
   describe "GET index" do
     before { Task.destroy_all }
 
-    let(:first_task) { Task.create(title: "Walk the dog") }
-    let(:second_task) { Task.create(title: "Buy groceries") }
+    let(:first_task) { FactoryGirl.create(:task, title: "Walk the dog") }
+    let(:second_task) { FactoryGirl.create(:task, title: "Buy groceries") }
 
     it "renders :index" do
       get :index
@@ -79,7 +79,7 @@ describe TasksController, type: :controller do
   end
 
   describe "GET edit" do
-    let(:task) { Task.create(title: "Walk the dog") }
+    let(:task) { FactoryGirl.create(:task) }
 
     it "renders :edit" do
       get :edit, id: task.id
@@ -93,13 +93,13 @@ describe TasksController, type: :controller do
   end
 
   describe "PUT update" do
-    let(:task) { Task.create(title: "Do the dishes") }
+    let(:task) { FactoryGirl.create(:task, title: "Do the dishes") }
 
     context "valid attributes" do
       # it changes @task's attributes
       it "changes @task's attributes" do
         # 1. Make a change to @task in the background
-        put :update, id: task.id, task: { title: "Walk the dog" }
+        put :update, id: task.id, task: FactoryGirl.attributes_for(:task, title: "Walk the dog")
         # 2. Refresh the data
         task.reload
         # 3. Test that @task (older version) isn't the same as @task (newer version)
@@ -107,7 +107,7 @@ describe TasksController, type: :controller do
       end
 
       it "redirects to :show" do
-        put :update, id: task.id, task: { title: "Walk the dog" }
+        put :update, id: task.id, task: FactoryGirl.attributes_for(:task, title: "Walk the dog")
         last_task = Task.last
         expect(response).to redirect_to(task_path(last_task.id))
       end

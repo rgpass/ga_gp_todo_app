@@ -53,11 +53,11 @@ describe "Authentication" do
           click_button "Sign In"
         end
 
-        describe "after signing in" do
-          it "renders the desired protected page" do # Friendly Forwarding
-            expect(page).to have_title("Todo | #{second_user.name}")
-          end
-        end
+        # describe "after signing in" do
+        #   it "renders the desired protected page" do # Friendly Forwarding
+        #     expect(page).to have_title("Todo | #{second_user.name}")
+        #   end
+        # end
       end
     end
   end

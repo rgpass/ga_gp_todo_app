@@ -15,6 +15,7 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
   it { should respond_to(:remember_token) }
+  it { should respond_to(:tasks) } # @user.tasks --> an array of all tasks associated with that user
   it { should be_valid }
 
   describe "validations" do
@@ -128,6 +129,27 @@ describe User do
 
       it "has a default value" do
         expect(@user.remember_token).to_not be_blank
+      end
+    end
+  end
+
+  describe "associations" do
+    describe "task" do
+      before do
+        User.destroy_all
+        @user.save
+        FactoryGirl.create(:task, user: @user)
+      end
+
+      context "on user destroy" do
+        it "destroys all associated tasks" do
+          tasks = @user.tasks.to_a # .to_a is probably not necessary
+          @user.destroy
+          expect(tasks).not_to be_empty
+          tasks.each do |task|
+            expect(Task.where(id: task.id)).to be_empty
+          end
+        end
       end
     end
   end

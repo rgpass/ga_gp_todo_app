@@ -1,7 +1,11 @@
 class Task < ActiveRecord::Base
-  validates :title, presence: true, length: { in: 3..254 }
+  belongs_to :user
 
-  before_save :set_due_at # Reminder: change to before_create when we cover edit/update to test before_create vs before_save
+  before_save :set_due_at
+  
+  validates :title, presence: true, length: { in: 3..254 }
+  validates :user_id, presence: true
+
 
   def set_due_at
     # Uses provided due_at or defaults to today
